@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Post\StoreRequest;
+use App\Http\Requests\Post\UpdateRequest;
+use App\Http\Resources\PostResource;
+use App\Http\Resources\ShowPostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -10,32 +14,52 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::all();
-        dd($posts);
-        return view('posts.index', compact('posts'));
+        $posts = PostResource::collection($posts)->resolve();
+
+        return inertia('Post/Index', [
+            'posts' => $posts
+        ]);
     }
 
     public function create()
     {
-        dd('cratepe page');
-        return view('posts.create');
+        return inertia('Post/Create');
     }
 
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $request->validate([
-            'title'=>'required',
-            'body'=>'required',
-        ]);
-        $post = Post::create($request->all());
-        dd($post);
-        return redirect()->route('posts.index');
+        $data = $request->validated();
+        $post = Post::create($data);
+        return redirect()->route('post.index');
     }
 
-    public function show($id)
+    public function update(Post $post, UpdateRequest $request)
     {
-        $post = Post::find($id);
-        dd($post);
-        return view('posts.show', compact('post'));
+        Post::updated($request->validated());
+        return redirect()->route('post.index');
+    }
+
+    public function show($post)
+    {
+        $post = Post::with([
+            'comments',
+        ])->whereId($post)
+            ->first();
+
+       $post = ShowPostResource::make($post)->resolve();
+       return inertia('Post/Show', compact('post'));
+    }
+
+    public function edit(Post $post)
+    {
+        return inertia('Post/Edit', compact('post'));
+    }
+
+    public function delete(Post $post)
+    {
+        $post->delete();
+        return redirect()->route('post.index');
+
     }
 
 }
