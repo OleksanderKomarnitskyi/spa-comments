@@ -43,7 +43,8 @@ class PostController extends Controller
     {
         $post = Post::with([
             'comments',
-        ])->whereId($post)
+        ])->withCount('comments')
+            ->whereId($post)
             ->first();
 
        $post = ShowPostResource::make($post)->resolve();

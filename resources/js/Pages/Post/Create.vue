@@ -1,5 +1,4 @@
 <template>
-    <div class="w-96 mx-auto pt-8" >
         <h1 class="text-lg" > Posts Create </h1>
         <Link :href="route('post.index')" class="text-lg" > Back </link>
         <form @submit.prevent="store">
@@ -17,16 +16,16 @@
                 </button>
             </div>
         </form>
-    </div>
-
 </template>
 
 <script>
 
 import {Link, router} from "@inertiajs/vue3";
+import PostLayout from "@/Layouts/PostLayout.vue";
 
 export default {
     name: "create",
+    layout: PostLayout,
     components: {
         Link
     },

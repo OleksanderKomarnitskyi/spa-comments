@@ -18,7 +18,9 @@ class ShowPostResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
-            'comments' => $this->comments ? CommentsResource::collection($this->comments) : []
+            'date' => $this->created_at->diffForHumans(),
+            'commentsCount' => $this->comments_count ?? 0,
+            'comments' => $this->comments ? CommentsResource::collection($this->comments)->resolve() : []
         ];
     }
 }

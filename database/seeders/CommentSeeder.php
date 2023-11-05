@@ -21,7 +21,7 @@ class CommentSeeder extends Seeder
         ];
 
 
-        $post = Post::find(1);
+        $post = Post::find(2);
 
        $parentComment1 = $post->comments()->create($inputComment);
        $parentComment2 = $post->comments()->create($inputComment);

@@ -22,6 +22,7 @@ class CommentsResource extends JsonResource
             'user_email' => $this->user_email,
             'body' => $this->body,
             'url' => $this->url ?? "",
+            'date' => $this->created_at->diffForHumans()
         ];
     }
 }

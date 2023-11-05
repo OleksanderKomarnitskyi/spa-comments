@@ -1,5 +1,4 @@
 <template>
-    <div class="w-96 mx-auto pt-8" >
         <h1 class="text-lg" > Edit </h1>
         <Link :href="route('post.index')" class="text-lg" > Back </link>
         <form @submit.prevent="update">
@@ -15,16 +14,16 @@
                 </button>
             </div>
         </form>
-    </div>
-
 </template>
 
 <script>
 
 import {Link, router} from "@inertiajs/vue3";
+import PostLayout from "@/Layouts/PostLayout.vue";
 
 export default {
     name: "edit",
+    layout: PostLayout,
     components: {
         Link
     },
