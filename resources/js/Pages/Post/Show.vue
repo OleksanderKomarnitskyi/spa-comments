@@ -9,8 +9,19 @@
             <div>Post ID: {{ post.id }}</div>
             <div>Title: {{ post.title }}</div>
             <div>Content: {{ post.content }}</div>
+            <div class="hover:bg-red-500 cursor-default  w-24 bg-green-500 rounded-lg text-center text-white"
+                 @click="toggleCommentPostForm">To comment</div>
+
             <div class="text-sm text-right">{{ post.date }}</div>
             <div class="text-sm text-right">comment count {{ post.commentsCount }}</div>
+
+            <div v-if="commentPostForm" >
+                <ReplyForm
+                    :postId="post.id"
+                    :parentId=null
+                ></ReplyForm>
+            </div>
+
         </div>
         <div class="mx-5" v-if="post.commentsCount > 0">
             <div class="" v-for="comment in post.comments">
@@ -19,41 +30,86 @@
                     <div>User: {{ comment.user_name }}</div>
                     <div>Email: {{ comment.user_email }}</div>
                     <div>Body: {{ comment.body }}</div>
+                    <div class="hover:bg-red-500 cursor-default  w-24 bg-green-500 rounded-lg text-center text-white"
+                         @click="toggleReplyForm(comment.id)">Reply</div>
+
+                    <div class="text-sm text-left">
+                        <div v-if="comment.subCount > 0" >
+                            <div class="hover:bg-red-500 cursor-default w-32 bg-green-500 rounded-lg text-center text-white"
+                                 @click="toggleShowSubComments(comment.id)">Show {{ comment.subCount }} comments </div>
+                        </div>
+                        <div v-if="comment.subCount < 1" >No comments</div>
+                    </div>
+
                     <div class="text-sm text-right">{{ comment.date }}</div>
-                    <div class="text-sm text-right"> Sab comment count {{ comment.subCount }}</div>
+
+                    <div v-if="selectedCommentId === comment.id" >
+                        <ReplyForm
+                            :postId="post.id"
+                            :parentId="comment.id"
+                        ></ReplyForm>
+                    </div>
+
                 </div>
 
-                <div v-if="comment.subCount > 0">
-                    <div class="ml-10 mb-4" v-for="com in comment.subCount">
-                        <div class="mt-8 p-2 border border-blue-600 rounded-lg">
-                            <div>Sub Comment ID:</div>
-                            <div>User:</div>
-                            <div>Email:</div>
-                            <div>Body:</div>
-                        </div>
-                    </div>
+                <div v-if="selectedParentCommentId === comment.id">
+                    <ChildComments
+                        :postId="post.id"
+                        :parentCommentId=comment.id
+                    ></ChildComments>
                 </div>
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
 
 import {Link} from "@inertiajs/vue3";
 import PostLayout from "@/Layouts/PostLayout.vue";
+import ChildComments from "@/Components/Comment/СhildСomments.vue"
+import ReplyForm from "@/Components/Comment/ReplyForm.vue";
 
 export default {
-    name: "show",
+    name: "Show",
     layout: PostLayout,
 
+    data() {
+        return {
+            selectedCommentId: null,
+            selectedParentCommentId: null,
+            commentPostForm: false
+        };
+    },
     props: [
         'post'
     ],
     components: {
-        Link
-    }
+        ReplyForm,
+        Link,
+        ChildComments,
+    },
+    methods: {
+        toggleReplyForm(commentId) {
+            if (this.selectedCommentId === commentId) {
+                this.selectedCommentId = null;
+            } else {
+                this.selectedCommentId = commentId;
+            }
+        },
+        toggleShowSubComments(parentCommentId) {
+            if (this.selectedParentCommentId === parentCommentId) {
+                this.selectedParentCommentId = null;
+            } else {
+                this.selectedParentCommentId = parentCommentId;
+            }
+        },
+        toggleCommentPostForm() {
+            this.commentPostForm = this.commentPostForm === false;
+        },
+
+    },
+
 }
 
 </script>

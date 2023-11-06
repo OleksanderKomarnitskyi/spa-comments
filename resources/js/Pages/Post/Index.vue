@@ -27,10 +27,10 @@
                     Edit
                 </Link>
             </div>
-            <div class="cursor-pinter text-sm text-right text-red-500">
-                <p @click="deletePost(post.id)">
+            <div class="text-sm text-right text-red-500">
+                <Link @click="deletePost(post.id)">
                     Delete
-                </p>
+                </Link>
             </div>
 
         </div>

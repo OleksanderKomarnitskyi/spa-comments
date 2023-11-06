@@ -3,11 +3,11 @@
         <Link :href="route('post.index')" class="text-lg" > Back </link>
         <form @submit.prevent="store">
             <div class="mb-2" >
-                <input v-model="title" type="text" class="w-full rounded-full border-gray-200" placeholder="title">
+                <input v-model="title" type="text" class="w-full rounded-lg border-gray-200" placeholder="title">
                 <div v-if="errors.title" class="text-red-600 text-sm" >{{errors.title}}</div>
             </div>
             <div class="mb-2" >
-                <textarea v-model="content" class="w-full rounded-full border-gray-200" placeholder="content" ></textarea>
+                <textarea v-model="content" class="w-full rounded-lg border-gray-200" placeholder="content" ></textarea>
                 <div v-if="errors.content" class="text-red-600 text-sm"  >{{errors.content}}</div>
             </div>
             <div class="mb-2" >

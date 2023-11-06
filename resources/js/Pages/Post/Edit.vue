@@ -3,13 +3,13 @@
         <Link :href="route('post.index')" class="text-lg" > Back </link>
         <form @submit.prevent="update">
             <div class="mb-2" >
-                <input v-model="title" type="text" class="w-full rounded-full border-gray-200" placeholder="title">
+                <input v-model="title" type="text" class="w-full rounded-lg border-gray-200" placeholder="title">
             </div>
             <div class="mb-2" >
-                <textarea v-model="content" class="w-full rounded-full border-gray-200" placeholder="content" ></textarea>
+                <textarea v-model="content" class="w-full rounded-lg border-gray-200" placeholder="content" ></textarea>
             </div>
             <div class="mb-2" >
-                <button type="submit" class="ml-auto hover:bg-red-500 block p-2 w-32 bg-sky-500 rounded-full text-center text-white" >
+                <button type="submit" class="ml-auto hover:bg-red-500 block p-2 w-32 bg-sky-500 rounded-lg text-center text-white" >
                     Update
                 </button>
             </div>

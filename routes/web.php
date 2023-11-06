@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -46,4 +47,6 @@ Route::prefix('/posts')->group(function () {
     Route::get('/edit/{post}', [PostController::class, 'edit'])->name('post.edit');
     Route::patch('/{post}', [PostController::class, 'update'])->name('post.update');
     Route::delete('/{post}', [PostController::class, 'delete'])->name('post.delete');
+    Route::post('/{post}/comment', [CommentController::class, 'store'])->name('post.comment.store');
 });
+
