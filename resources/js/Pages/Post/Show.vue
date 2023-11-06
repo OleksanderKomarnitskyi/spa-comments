@@ -24,8 +24,8 @@
             </div>
 
         </div>
-        <div class="mx-5" v-if="post.commentsCount > 0">
-            <div class="" v-for="comment in post.comments">
+        <div class="mx-5" v-if="comments.data">
+            <div class="" v-for="comment in comments.data">
                 <div class="mt-8 p-2 border border-blue-600 rounded-lg">
                     <div>Comment ID: {{ comment.id }}</div>
                     <div>User: {{ comment.user_name }}</div>
@@ -61,6 +61,9 @@
                     ></ChildComments>
                 </div>
             </div>
+
+            <pagination class="mt-6" :links="comments.meta.links" />
+
         </div>
     </div>
 </template>
@@ -71,11 +74,11 @@ import {Link} from "@inertiajs/vue3";
 import PostLayout from "@/Layouts/PostLayout.vue";
 import ChildComments from "@/Components/Comment/СhildСomments.vue"
 import ReplyForm from "@/Components/Comment/ReplyForm.vue";
+import Pagination from "@/Components/Pagination.vue"
 
 export default {
     name: "Show",
     layout: PostLayout,
-
     data() {
         return {
             selectedCommentId: null,
@@ -85,13 +88,20 @@ export default {
     },
     props: [
         'post',
-        'errors'
+        'errors',
+        'comments'
     ],
     components: {
         ReplyForm,
         Link,
         ChildComments,
+        Pagination
     },
+
+    // mounted() {
+    //     console.log(this.comments);
+    // },
+
     methods: {
         toggleReplyForm(commentId) {
             if (this.selectedCommentId === commentId) {
@@ -114,7 +124,6 @@ export default {
     },
 
 }
-
 </script>
 
 <style>

@@ -17,7 +17,7 @@ class CommentsResource extends JsonResource
         return [
             'id' => $this->id,
             'parent_id' => $this->parent_id ?? null,
-            'subCount' => $this->subCommentCount(),
+            'subCount' => $this->replies_count ?? 0,
             'user_name' => $this->user_name,
             'user_email' => $this->user_email,
             'body' => $this->body,

@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import {Head, Link} from '@inertiajs/vue3';
 </script>
 
 <template>
@@ -9,6 +9,11 @@ import { Head } from '@inertiajs/vue3';
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>
+            <Link
+                :href="route('post.index')"
+                class="font-semibold text-xl text-gray-800 leading-tight"
+            >Posts</Link
+            >
         </template>
 
         <div class="py-12">

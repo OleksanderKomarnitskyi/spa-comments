@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Post\StoreRequest;
 use App\Http\Requests\Post\UpdateRequest;
+use App\Http\Resources\Comment\CommentsResource;
 use App\Http\Resources\PostResource;
 use App\Http\Resources\ShowPostResource;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Services\PostService;
 use Exception;
@@ -34,7 +36,7 @@ class PostController extends Controller
      */
     public function index(): Response
     {
-        $posts = Post::select(['id', 'title', 'content','created_at'])
+        $posts = Post::select(['id', 'title', 'content', 'created_at'])
             ->orderByDesc('created_at')
             ->get();
         $posts = PostResource::collection($posts)->resolve();
@@ -78,24 +80,28 @@ class PostController extends Controller
     public function update(Post $post, UpdateRequest $request): RedirectResponse
     {
         $data = $request->validated();
-        $this->postService->update($post,$data);
+        $this->postService->update($post, $data);
         return redirect()->route('post.index');
     }
 
-    /**
-     * @param $post
-     * @return Response
-     */
-    public function show($post): Response
-    {
-        $post = Post::with([
-            'comments'
-        ])->withCount('comments')
-            ->whereId($post)
-            ->first();
 
-       $post = ShowPostResource::make($post)->resolve();
-       return inertia('Post/Show', compact('post'));
+    public function show(Post $post)
+    {
+        $comments = [];
+        $post->loadCount('comments');
+        $post = ShowPostResource::make($post)->resolve();
+
+        if ($post['commentsCount']) {
+            $comments = Comment::with('replies')
+                ->withCount('replies')
+                ->where('post_id', $post['id'])
+                ->whereNull('parent_id')
+                ->orderByDesc('created_at')
+                ->paginate(25)
+                ->withQueryString();
+            $comments = CommentsResource::collection($comments);
+        }
+        return inertia('Post/Show', compact('post', 'comments'));
     }
 
     /**

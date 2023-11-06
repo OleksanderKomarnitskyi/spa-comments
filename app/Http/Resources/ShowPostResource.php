@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Http\Resources;
-
-use App\Http\Resources\Comment\CommentsResource;
+;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -21,7 +20,6 @@ class ShowPostResource extends JsonResource
             'content' => $this->content,
             'date' => $this->created_at->diffForHumans(),
             'commentsCount' => $this->comments_count ?? 0,
-            'comments' => $this->comments ? CommentsResource::collection($this->comments)->resolve() : []
         ];
     }
 }
