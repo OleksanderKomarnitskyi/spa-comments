@@ -27,6 +27,7 @@
                     <ReplyForm
                         :postId="this.postId"
                         :parentId="comment.id"
+                        :errors=this.errors
                     ></ReplyForm>
                 </div>
 
@@ -59,7 +60,8 @@ export default {
     },
     props: [
         "parentCommentId",
-        "postId"
+        "postId",
+        'errors'
     ],
     mounted() {
         this.getComments(this.parentCommentId);

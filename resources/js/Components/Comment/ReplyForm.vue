@@ -4,19 +4,19 @@
                 <form @submit.prevent="store">
                     <div class="mb-2" >
                         <input v-model="userName" type="text" class="w-full rounded-lg border-gray-200" placeholder="Yor Full name">
-<!--                        <div v-if="errors.user_name" class="text-red-600 text-sm" >{{errors.user_name}}</div>-->
+                        <div v-if="errors.user_name" class="text-red-600 text-sm" >{{errors.user_name}}</div>
                     </div>
                     <div class="mb-2" >
                         <input v-model="userEmail" type="text" class="w-full rounded-lg border-gray-200" placeholder="Contact email">
-<!--                        <div v-if="errors.userEmail" class="text-red-600 text-sm" >{{errors.userEmail}}</div>-->
+                        <div v-if="errors.user_email" class="text-red-600 text-sm" >{{errors.user_email}}</div>
                     </div>
                     <div class="mb-2" >
                         <input v-model="url" type="text" class="w-full rounded-lg border-gray-200" placeholder="Link to yor site">
-<!--                        <div v-if="errors.url" class="text-red-600 text-sm" >{{errors.url}}</div>-->
+                        <div v-if="errors.url" class="text-red-600 text-sm" >{{errors.url}}</div>
                     </div>
                     <div class="mb-2" >
                         <textarea v-model="body" class="w-full rounded-lg border-gray-200" placeholder="content" ></textarea>
-<!--                        <div v-if="errors.body" class="text-red-600 text-sm"  >{{errors.content}}</div>-->
+                        <div v-if="errors.body" class="text-red-600 text-sm"  >{{errors.body}}</div>
                     </div>
 
                     <div class="mb-2" >

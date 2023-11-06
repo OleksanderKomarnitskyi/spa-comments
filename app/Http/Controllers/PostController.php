@@ -9,6 +9,7 @@ use App\Http\Resources\ShowPostResource;
 use App\Models\Post;
 use App\Services\PostService;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Response;
 
@@ -88,7 +89,7 @@ class PostController extends Controller
     public function show($post): Response
     {
         $post = Post::with([
-            'comments',
+            'comments'
         ])->withCount('comments')
             ->whereId($post)
             ->first();

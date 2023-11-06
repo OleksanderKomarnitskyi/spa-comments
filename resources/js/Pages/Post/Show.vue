@@ -19,6 +19,7 @@
                 <ReplyForm
                     :postId="post.id"
                     :parentId=null
+                    :errors=this.errors
                 ></ReplyForm>
             </div>
 
@@ -47,6 +48,7 @@
                         <ReplyForm
                             :postId="post.id"
                             :parentId="comment.id"
+                            :errors=this.errors
                         ></ReplyForm>
                     </div>
 
@@ -82,7 +84,8 @@ export default {
         };
     },
     props: [
-        'post'
+        'post',
+        'errors'
     ],
     components: {
         ReplyForm,

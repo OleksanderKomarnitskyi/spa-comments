@@ -54,6 +54,7 @@ class CommentController extends Controller
         $comments = Comment::with('parent')
             ->where('parent_id', $parentId)
             ->withCount('replies')
+            ->orderByDesc('created_at')
             ->get();
 
         return ShowChildrenCommentsResource::collection($comments)->resolve();
