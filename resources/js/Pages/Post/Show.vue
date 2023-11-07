@@ -58,6 +58,7 @@
                     <ChildComments
                         :postId="post.id"
                         :parentCommentId=comment.id
+                        :errors=this.errors
                     ></ChildComments>
                 </div>
             </div>
@@ -72,9 +73,9 @@
 
 import {Link} from "@inertiajs/vue3";
 import PostLayout from "@/Layouts/PostLayout.vue";
-import ChildComments from "@/Components/Comment/СhildСomments.vue"
+import ChildComments from "@/Components/Comment/СhildСomments.vue";
 import ReplyForm from "@/Components/Comment/ReplyForm.vue";
-import Pagination from "@/Components/Pagination.vue"
+import Pagination from "@/Components/Pagination.vue";
 
 export default {
     name: "Show",
@@ -95,12 +96,8 @@ export default {
         ReplyForm,
         Link,
         ChildComments,
-        Pagination
+        Pagination,
     },
-
-    // mounted() {
-    //     console.log(this.comments);
-    // },
 
     methods: {
         toggleReplyForm(commentId) {

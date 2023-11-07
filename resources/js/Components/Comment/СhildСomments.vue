@@ -37,6 +37,7 @@
                 <ChildComments
                     :postId="this.postId"
                     :parentCommentId=comment.id
+                    :errors=this.errors
                 ></ChildComments>
             </div>
 
@@ -61,7 +62,7 @@ export default {
     props: [
         "parentCommentId",
         "postId",
-        'errors'
+        "errors"
     ],
     mounted() {
         this.getComments(this.parentCommentId);

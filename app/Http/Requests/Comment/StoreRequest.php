@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Comment;
 
+use App\Rules\Recaptcha;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -48,6 +49,10 @@ class StoreRequest extends FormRequest
                 'required',
                 'string',
                 'max:1500'
+            ],
+            'captcha_token'  => [
+                'required',
+                new Recaptcha()
             ]
         ];
     }
