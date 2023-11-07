@@ -20,7 +20,9 @@
                     :postId="post.id"
                     :parentId=null
                     :errors=this.errors
+                    @addComment="addCom"
                 ></ReplyForm>
+
             </div>
 
         </div>
@@ -49,6 +51,7 @@
                             :postId="post.id"
                             :parentId="comment.id"
                             :errors=this.errors
+                            @addComment="addCom"
                         ></ReplyForm>
                     </div>
 
@@ -99,6 +102,19 @@ export default {
         Pagination,
     },
 
+    created() {
+        window.Echo.channel(`store_comment_${this.post.id}`)
+            .listen('.store_comment', res => {
+                // console.log(res.comment, "WS inp")
+                if (res.comment.parent_id === null) {
+                    this.comments.data.unshift(res.comment)
+                } else {
+                    // console.log(e, 'WS par id yes')
+                }
+
+            })
+    },
+
     methods: {
         toggleReplyForm(commentId) {
             if (this.selectedCommentId === commentId) {
@@ -117,6 +133,18 @@ export default {
         toggleCommentPostForm() {
             this.commentPostForm = this.commentPostForm === false;
         },
+
+        addCom(e) {
+            if (e.parent_id === null) {
+                // console.log('has  null')
+                this.comments.data.unshift(e)
+                this.commentPostForm = false
+            } else {
+                console.log(this.comments)
+                console.log(e.parent_id, 'id yes')
+            }
+
+        }
 
     },
 

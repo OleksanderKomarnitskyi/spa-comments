@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\StoreCommentEvent;
 use App\Http\Requests\Comment\StoreRequest;
 use App\Http\Resources\Comment\ShowChildrenCommentsResource;
 use App\Models\Comment;
@@ -26,22 +27,15 @@ class CommentController extends Controller
         $this->commentService = $commentService;
     }
 
-    /**
-     * @param Post $post
-     * @param StoreRequest $request
-     * @return RedirectResponse|string
-     * @throws Exception
-     */
-    public function store(Post $post, StoreRequest $request): RedirectResponse|string
+
+    public function store(Post $post, StoreRequest $request)
     {
         $data = $request->validated();
         $comment = $this->commentService->create($post, $data);
 
-        if ($comment) {
-            return redirect()->route('post.show', $post->id);
-        } else {
-            return response("Error", 500);
-        }
+        broadcast(new StoreCommentEvent($comment))->toOthers();
+
+        return ShowChildrenCommentsResource::make($comment)->resolve();
 
     }
 

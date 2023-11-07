@@ -28,6 +28,7 @@
                         :postId="this.postId"
                         :parentId="comment.id"
                         :errors=this.errors
+                        @addComment="addCom"
                     ></ReplyForm>
                 </div>
 
