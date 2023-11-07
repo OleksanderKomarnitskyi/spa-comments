@@ -76,11 +76,9 @@ export default {
                 body: this.body,
                 captcha_token: this.captcha_token
             }
-            // this.$inertia.post(`/posts/${this.postId}/comment`, commentObject);
 
             axios.post(`/posts/${this.postId}/comment`, commentObject)
                 .then(res => {
-                    console.log(res.data, 'web inp')
                     this.$emit('addComment', res.data)
                 })
         }

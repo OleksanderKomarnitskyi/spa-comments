@@ -63,8 +63,27 @@ export default {
     props: [
         "parentCommentId",
         "postId",
-        "errors"
+        "errors",
     ],
+
+    created() {
+        window.Echo.channel(`store_comment_${this.postId}`)
+            .listen('.store_comment', res => {
+                if (res.comment.parent_id === null) {
+                    this.comments.data.unshift(res.comment)
+                } else {
+                    if (this.selectedParentCommentId === res.comment.parent_id) {
+                        this.toggleShowSubComments(res.comment.parent_id)
+                        setTimeout(() => {
+                            this.toggleShowSubComments(res.comment.parent_id)
+                        }, 2000);
+                    }
+                }
+
+            })
+    },
+
+
     mounted() {
         this.getComments(this.parentCommentId);
     },

@@ -105,13 +105,16 @@ export default {
     created() {
         window.Echo.channel(`store_comment_${this.post.id}`)
             .listen('.store_comment', res => {
-                // console.log(res.comment, "WS inp")
                 if (res.comment.parent_id === null) {
                     this.comments.data.unshift(res.comment)
                 } else {
-                    // console.log(e, 'WS par id yes')
+                    if (this.selectedParentCommentId === res.comment.parent_id) {
+                        this.toggleShowSubComments(res.comment.parent_id)
+                        setTimeout(() => {
+                            this.toggleShowSubComments(res.comment.parent_id)
+                        }, 2000);
+                    }
                 }
-
             })
     },
 
@@ -136,12 +139,18 @@ export default {
 
         addCom(e) {
             if (e.parent_id === null) {
-                // console.log('has  null')
                 this.comments.data.unshift(e)
                 this.commentPostForm = false
             } else {
-                console.log(this.comments)
-                console.log(e.parent_id, 'id yes')
+                this.toggleReplyForm(e.parent_id)
+                if (this.selectedParentCommentId === e.parent_id) {
+                    this.toggleShowSubComments(e.parent_id)
+                    setTimeout(() => {
+                        this.toggleShowSubComments(e.parent_id)
+                    }, 2000);
+
+                }
+
             }
 
         }
