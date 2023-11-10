@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Resources;
-;
+
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,7 +19,7 @@ class ShowPostResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
-            'date' => $this->created_at->diffForHumans(),
+            'date' => Carbon::create($this->created_at)->format('m.d.y' . ' в ' . 'h:m' ),
             'commentsCount' => $this->comments_count ?? 0,
         ];
     }

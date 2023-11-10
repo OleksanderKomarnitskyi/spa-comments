@@ -19,9 +19,7 @@ class CommentSeeder extends Seeder
             'url' => fake()->url ,
             'body' => fake()->realText(100)
         ];
-
-
-        $post = Post::find(2);
+        $post = Post::first();
 
        $parentComment1 = $post->comments()->create($inputComment);
        $parentComment2 = $post->comments()->create($inputComment);

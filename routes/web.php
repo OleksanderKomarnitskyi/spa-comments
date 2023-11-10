@@ -43,7 +43,7 @@ Route::prefix('/posts')->group(function () {
     Route::get('/', [PostController::class, 'index'])->name('post.index');
     Route::get('/create', [PostController::class, 'create'])->name('post.create');
     Route::post('/', [PostController::class, 'store'])->name('post.store');
-    Route::get('/{post}', [PostController::class, 'show'])->name('post.show');
+    Route::get('/{id}', [PostController::class, 'show'])->name('post.show');
     Route::get('/edit/{post}', [PostController::class, 'edit'])->name('post.edit');
     Route::patch('/{post}', [PostController::class, 'update'])->name('post.update');
     Route::delete('/{post}', [PostController::class, 'delete'])->name('post.delete');

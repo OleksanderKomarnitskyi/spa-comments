@@ -3,6 +3,7 @@
 namespace App\Services;
 
 
+use App\Events\UpdatePostEvent;
 use App\Models\Post;
 use Exception;
 use Illuminate\Database\Eloquent\Model;

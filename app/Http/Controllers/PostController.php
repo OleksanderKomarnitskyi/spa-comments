@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UpdatePostEvent;
 use App\Http\Requests\Post\StoreRequest;
 use App\Http\Requests\Post\UpdateRequest;
 use App\Http\Resources\Comment\CommentsResource;
@@ -9,11 +10,13 @@ use App\Http\Resources\PostResource;
 use App\Http\Resources\ShowPostResource;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Observers\PostObserver;
 use App\Services\PostService;
 use Exception;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Response;
+use Inertia\ResponseFactory;
 
 class PostController extends Controller
 {
@@ -36,10 +39,11 @@ class PostController extends Controller
      */
     public function index(): Response
     {
-        $posts = Post::select(['id', 'title', 'content', 'created_at'])
-            ->orderByDesc('created_at')
-            ->get();
-        $posts = PostResource::collection($posts)->resolve();
+        $posts = Cache::remember('posts:index', 60*60*24, function ()  {
+            return Post::select(['id', 'title', 'content', 'created_at'])->get();
+        });
+
+        $posts = PostResource::collection($posts->sortByDesc('created_at'))->resolve();
 
         return inertia('Post/Index', [
             'posts' => $posts
@@ -71,6 +75,7 @@ class PostController extends Controller
         }
     }
 
+
     /**
      * @param Post $post
      * @param UpdateRequest $request
@@ -81,12 +86,23 @@ class PostController extends Controller
     {
         $data = $request->validated();
         $this->postService->update($post, $data);
+        event(new UpdatePostEvent($post));
         return redirect()->route('post.index');
     }
 
 
-    public function show(Post $post)
+    public function show($id)
     {
+        if (Cache::has('posts:' . $id)) {
+            $post = Cache::get('posts:' . $id);
+        } else {
+            $post = Post::find($id);
+        }
+
+        if (!$post) {
+            return response("Not found content", 404);
+        }
+
         $comments = [];
         $post->loadCount('comments');
         $post = ShowPostResource::make($post)->resolve();

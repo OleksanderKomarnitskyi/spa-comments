@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Comment;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,7 +23,7 @@ class CommentsResource extends JsonResource
             'user_email' => $this->user_email,
             'body' => $this->body,
             'url' => $this->url ?? "",
-            'date' => $this->created_at->diffForHumans()
+            'date' => Carbon::create($this->created_at)->format('m.d.y' . ' в ' . 'h:m' )
         ];
     }
 }
