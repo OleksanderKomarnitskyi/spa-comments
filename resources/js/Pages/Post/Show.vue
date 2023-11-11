@@ -57,6 +57,7 @@
                     </div>
                 <div v-if="selectedParentCommentId === comment.id">
                     <ChildComments
+                        :key=randNum
                         :postId="post.id"
                         :parentCommentId=comment.id
                         :errors=this.errors
@@ -85,7 +86,8 @@ export default {
         return {
             selectedCommentId: null,
             selectedParentCommentId: null,
-            commentPostForm: false
+            commentPostForm: false,
+            randNum: null
         };
     },
     props: [
@@ -98,9 +100,6 @@ export default {
         Link,
         ChildComments,
         Pagination,
-    },
-    mounted() {
-        // console.log(this.comments)
     },
 
     created() {
@@ -149,21 +148,12 @@ export default {
                     this.commentPostForm = false
                 }
             } else {
-                this.toggleReplyForm(e.parent_id) // закрити форму
-                console.log(e, 'e')
+                this.toggleReplyForm(e.parent_id)
                 const parentComment = this.comments.data.find(comment => comment.id === e.parent_id);
                 parentComment.subCount++;
 
                 if (this.selectedParentCommentId === e.parent_id) {
-
-                    const parentElement = document.getElementById('parent-' + parentComment.id);
-
-                    // const parentElement = this.$refs['parent-' + parentComment.id];
-
-                    parentElement.appendChild(newElement);
-                    console.log(parentComment.id, 'parentComment ')
-                    console.log(parentElement, 'parentElement ')
-
+                    this.randNum = Math.random()
                 }
 
             }

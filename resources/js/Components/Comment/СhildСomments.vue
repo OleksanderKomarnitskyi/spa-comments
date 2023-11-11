@@ -1,6 +1,6 @@
 
 <template>
-    <div :id="'parent-' + parentCommentId"  class="ml-10 mb-4">
+    <div class="ml-10 mb-4">
         <div v-for="comment in comments" :key="comment.id" >
             <div class="mt-8 p-2 border border-blue-600 rounded-lg">
                 <div class="pl-2 my-2 border-l-4 border-gray-600 bg-green-200" >
@@ -25,12 +25,13 @@
                         :postId="this.postId"
                         :parentId="comment.id"
                         :errors=this.errors
-                        @addComment="addCom"
+                        @addComment="addSubCom"
                     ></ReplyForm>
                 </div>
             </div>
             <div v-if="selectedParentCommentId === comment.id">
                 <ChildComments
+                    :key=randNum
                     :postId="this.postId"
                     :parentCommentId=comment.id
                     :errors=this.errors
@@ -52,6 +53,7 @@ export default {
             postId: this.postId,
             selectedCommentId: null,
             selectedParentCommentId: null,
+            randNum: null
         };
     },
     props: [
@@ -109,7 +111,19 @@ export default {
             }
         },
 
+        addSubCom(e) {
+            this.toggleReplyForm(e.parent_id)
+            const parentComment = this.comments.find(comment => comment.id === e.parent_id);
+            parentComment.subCount++;
+            if (this.selectedParentCommentId === e.parent_id) {
+                this.randNum = Math.random()
+            }
+
+        }
+
     },
+
+
 };
 </script>
 
