@@ -115,7 +115,12 @@ export default {
                         this.commentPostForm = false
                     }
                 } else {
-                    if (this.selectedParentCommentId === res.comment.parent_id) {
+                    const parentComment = this.comments.data.find(comment => comment.id === res.comment.parent_id );
+                    if (parentComment) {
+                        parentComment.subCount++;
+                    }
+
+                    if (this.selectedParentCommentId === res.comment.parent_id ) {
                         this.randNum = Math.random()
                     }
                 }

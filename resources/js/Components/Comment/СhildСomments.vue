@@ -66,19 +66,12 @@ export default {
     created() {
         window.Echo.channel(`store_comment_${this.postId}`)
             .listen('.store_comment', res => {
-                if (res.comment.parent_id === null) {
-                    this.post.commentsCount++;
-                    if (this.comments.length === 0) {
-                        this.comments.data = [];
-                        this.comments.data.push(res.comment);
-                    } else {
-                        this.comments.data.unshift(res.comment)
-                        this.commentPostForm = false
-                    }
-                } else {
-                    if (this.selectedParentCommentId === res.comment.parent_id) {
-                        this.randNum = Math.random()
-                    }
+                const subComment = this.comments.find(comment => comment.id === res.comment.parent_id);
+                if (subComment) {
+                    subComment.subCount++;
+                }
+                if (this.selectedParentCommentId === res.comment.parent_id) {
+                    this.randNum = Math.random()
                 }
             })
     },
@@ -118,12 +111,10 @@ export default {
         addSubCom(e) {
             this.toggleReplyForm(e.parent_id)
             const parentComment = this.comments.find(comment => comment.id === e.parent_id);
-            console.log(parentComment, 'addSubCom(e)')
             parentComment.subCount++;
             if (this.selectedParentCommentId === e.parent_id) {
                 this.randNum = Math.random()
             }
-
         }
 
     },
