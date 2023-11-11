@@ -4,19 +4,19 @@
         <form @submit.prevent="recaptcha">
             <div class="mb-2">
                 <input v-model="user_name" type="text" class="w-full rounded-lg border-gray-200" placeholder="Yor Full name">
-                <div v-if="errors.user_name" class="text-red-600 text-sm">{{ errors.user_name }}</div>
+                <div v-if="errors.user_name" class="text-red-600 text-sm">{{ errors.user_name[0] }}</div>
             </div>
             <div class="mb-2">
                 <input v-model="user_email" type="text" class="w-full rounded-lg border-gray-200" placeholder="Contact email">
-                <div v-if="errors.user_email" class="text-red-600 text-sm">{{ errors.user_email }}</div>
+                <div v-if="errors.user_email" class="text-red-600 text-sm">{{ errors.user_email[0]  }}</div>
             </div>
             <div class="mb-2">
                 <input v-model="url" type="text" class="w-full rounded-lg border-gray-200" placeholder="Link to yor site">
-                <div v-if="errors.url" class="text-red-600 text-sm">{{ errors.url }}</div>
+                <div v-if="errors.url" class="text-red-600 text-sm">{{ errors.url[0]  }}</div>
             </div>
             <div class="mb-2">
                 <textarea v-model="body" class="w-full rounded-lg border-gray-200" placeholder="content"></textarea>
-                <div v-if="errors.body" class="text-red-600 text-sm">{{ errors.body }}</div>
+                <div v-if="errors.body" class="text-red-600 text-sm">{{ errors.body[0]  }}</div>
             </div>
 
             <jet-input-error :message="errors.captcha_token" class="mt-2" />
@@ -39,7 +39,6 @@ export default {
     props: [
         'postId',
         'parentId',
-        'errors'
     ],
     data() {
         return {
@@ -50,6 +49,7 @@ export default {
             user_email: '',
             url: '',
             captcha_token: null,
+            errors: []
         }
     },
     emits: [
@@ -80,7 +80,13 @@ export default {
             axios.post(`/posts/${this.postId}/comment`, commentObject)
                 .then(res => {
                     this.$emit('addComment', res.data)
-                })
+                }) .catch(error => this.handleError(error))
+        },
+
+        handleError(error) {
+            if (error.response.status === 422) {
+                this.errors = error.response.data.errors;
+            }
         }
 
     }
