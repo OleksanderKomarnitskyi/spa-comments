@@ -1,26 +1,27 @@
-
 <template>
     <div class="ml-10 mb-4">
-        <div v-for="comment in comments" :key="comment.id" >
+        <div v-for="comment in comments" :key="comment.id">
             <div class="mt-8 p-2 border border-blue-600 rounded-lg">
-                <div class="pl-2 my-2 border-l-4 border-gray-600 bg-green-200" >
-                    {{comment.parent_body}}
+                <div class="pl-2 my-2 border-l-4 border-gray-600 bg-green-200">
+                    {{ comment.parent_body }}
                 </div>
                 <div>Sub Comment ID: {{ comment.id }}</div>
                 <div>User: {{ comment.user_name }}</div>
                 <div>Email: {{ comment.user_email }}</div>
                 <div>Body: {{ comment.body }}</div>
                 <div class="hover:bg-red-500 cursor-default  w-24 bg-green-500 rounded-lg text-center text-white"
-                     @click="toggleReplyForm(comment.id)">Reply</div>
+                     @click="toggleReplyForm(comment.id)">Reply
+                </div>
                 <div class="text-sm text-left">
-                    <div v-if="comment.subCount > 0" >
+                    <div v-if="comment.subCount > 0">
                         <div class="hover:bg-red-500 cursor-default w-32 bg-green-500 rounded-lg text-center text-white"
-                             @click="toggleShowSubComments(comment.id)">Show {{ comment.subCount }} comments </div>
+                             @click="toggleShowSubComments(comment.id)">Show {{ comment.subCount }} comments
+                        </div>
                     </div>
-                    <div v-if="comment.subCount < 1" >No comments</div>
+                    <div v-if="comment.subCount < 1">No comments</div>
                 </div>
                 <div class="text-sm text-right">{{ comment.date }}</div>
-                <div v-if="selectedCommentId === comment.id" >
+                <div v-if="selectedCommentId === comment.id">
                     <ReplyForm
                         :postId="this.postId"
                         :parentId="comment.id"
@@ -66,16 +67,19 @@ export default {
         window.Echo.channel(`store_comment_${this.postId}`)
             .listen('.store_comment', res => {
                 if (res.comment.parent_id === null) {
-                    this.comments.data.unshift(res.comment)
+                    this.post.commentsCount++;
+                    if (this.comments.length === 0) {
+                        this.comments.data = [];
+                        this.comments.data.push(res.comment);
+                    } else {
+                        this.comments.data.unshift(res.comment)
+                        this.commentPostForm = false
+                    }
                 } else {
                     if (this.selectedParentCommentId === res.comment.parent_id) {
-                        this.toggleShowSubComments(res.comment.parent_id)
-                        setTimeout(() => {
-                            this.toggleShowSubComments(res.comment.parent_id)
-                        }, 2000);
+                        this.randNum = Math.random()
                     }
                 }
-
             })
     },
 
@@ -114,6 +118,7 @@ export default {
         addSubCom(e) {
             this.toggleReplyForm(e.parent_id)
             const parentComment = this.comments.find(comment => comment.id === e.parent_id);
+            console.log(parentComment, 'addSubCom(e)')
             parentComment.subCount++;
             if (this.selectedParentCommentId === e.parent_id) {
                 this.randNum = Math.random()

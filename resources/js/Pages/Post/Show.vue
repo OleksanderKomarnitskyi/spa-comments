@@ -106,13 +106,17 @@ export default {
         window.Echo.channel(`store_comment_${this.post.id}`)
             .listen('.store_comment', res => {
                 if (res.comment.parent_id === null) {
-                    this.comments.data.unshift(res.comment)
+                    this.post.commentsCount++;
+                    if (this.comments.length === 0) {
+                        this.comments.data = [];
+                        this.comments.data.push(res.comment);
+                    } else {
+                        this.comments.data.unshift(res.comment)
+                        this.commentPostForm = false
+                    }
                 } else {
                     if (this.selectedParentCommentId === res.comment.parent_id) {
-                        this.toggleShowSubComments(res.comment.parent_id)
-                        setTimeout(() => {
-                            this.toggleShowSubComments(res.comment.parent_id)
-                        }, 2000);
+                        this.randNum = Math.random()
                     }
                 }
             })
