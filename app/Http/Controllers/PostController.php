@@ -10,13 +10,11 @@ use App\Http\Resources\PostResource;
 use App\Http\Resources\ShowPostResource;
 use App\Models\Comment;
 use App\Models\Post;
-use App\Observers\PostObserver;
 use App\Services\PostService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Response;
-use Inertia\ResponseFactory;
 
 class PostController extends Controller
 {
@@ -93,11 +91,9 @@ class PostController extends Controller
 
     public function show($id)
     {
-        if (Cache::has('posts:' . $id)) {
-            $post = Cache::get('posts:' . $id);
-        } else {
-            $post = Post::find($id);
-        }
+        $post = Cache::remember('posts:' . $id, 60*60*24, function () use($id) {
+            return Post::find($id);
+        });
 
         if (!$post) {
             return response("Not found content", 404);

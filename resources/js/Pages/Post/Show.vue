@@ -29,34 +29,32 @@
         <div class="mx-5" v-if="comments.data">
             <div class="" v-for="comment in comments.data">
                 <div class="mt-8 p-2 border border-blue-600 rounded-lg">
-                    <div>Comment ID: {{ comment.id }}</div>
-                    <div>User: {{ comment.user_name }}</div>
-                    <div>Email: {{ comment.user_email }}</div>
-                    <div>Body: {{ comment.body }}</div>
-                    <div class="hover:bg-red-500 cursor-default  w-24 bg-green-500 rounded-lg text-center text-white"
-                         @click="toggleReplyForm(comment.id)">Reply</div>
+                        <div>Comment ID: {{ comment.id }}</div>
+                        <div>User: {{ comment.user_name }}</div>
+                        <div>Email: {{ comment.user_email }}</div>
+                        <div>Body: {{ comment.body }}</div>
+                        <div class="hover:bg-red-500 cursor-default  w-24 bg-green-500 rounded-lg text-center text-white"
+                             @click="toggleReplyForm(comment.id)">Reply</div>
 
-                    <div class="text-sm text-left">
-                        <div v-if="comment.subCount > 0" >
-                            <div class="hover:bg-red-500 cursor-default w-32 bg-green-500 rounded-lg text-center text-white"
-                                 @click="toggleShowSubComments(comment.id)">Show {{ comment.subCount }} comments </div>
+                        <div class="text-sm text-left">
+                            <div v-if="comment.subCount > 0" >
+                                <div class="hover:bg-red-500 cursor-default w-32 bg-green-500 rounded-lg text-center text-white"
+                                     @click="toggleShowSubComments(comment.id)">Show {{ comment.subCount }} comments </div>
+                            </div>
+                            <div v-if="comment.subCount < 1" >No comments</div>
                         </div>
-                        <div v-if="comment.subCount < 1" >No comments</div>
+
+                        <div class="text-sm text-right">{{ comment.date }}</div>
+
+                        <div v-if="selectedCommentId === comment.id" >
+                            <ReplyForm
+                                :postId="post.id"
+                                :parentId="comment.id"
+                                :errors=this.errors
+                                @addComment="addCom"
+                            ></ReplyForm>
+                        </div>
                     </div>
-
-                    <div class="text-sm text-right">{{ comment.date }}</div>
-
-                    <div v-if="selectedCommentId === comment.id" >
-                        <ReplyForm
-                            :postId="post.id"
-                            :parentId="comment.id"
-                            :errors=this.errors
-                            @addComment="addCom"
-                        ></ReplyForm>
-                    </div>
-
-                </div>
-
                 <div v-if="selectedParentCommentId === comment.id">
                     <ChildComments
                         :postId="post.id"
@@ -66,7 +64,7 @@
                 </div>
             </div>
 
-            <pagination class="mt-6" :links="comments.meta.links" />
+            <pagination v-if="comments.meta" class="mt-6" :links="comments.meta.links" />
 
         </div>
     </div>
@@ -100,6 +98,9 @@ export default {
         Link,
         ChildComments,
         Pagination,
+    },
+    mounted() {
+        // console.log(this.comments)
     },
 
     created() {
@@ -139,15 +140,29 @@ export default {
 
         addCom(e) {
             if (e.parent_id === null) {
-                this.comments.data.unshift(e)
-                this.commentPostForm = false
+                this.post.commentsCount++;
+                if (this.comments.length === 0) {
+                    this.comments.data = [];
+                    this.comments.data.push(e);
+                } else {
+                    this.comments.data.unshift(e)
+                    this.commentPostForm = false
+                }
             } else {
-                this.toggleReplyForm(e.parent_id)
+                this.toggleReplyForm(e.parent_id) // закрити форму
+                console.log(e, 'e')
+                const parentComment = this.comments.data.find(comment => comment.id === e.parent_id);
+                parentComment.subCount++;
+
                 if (this.selectedParentCommentId === e.parent_id) {
-                    this.toggleShowSubComments(e.parent_id)
-                    setTimeout(() => {
-                        this.toggleShowSubComments(e.parent_id)
-                    }, 2000);
+
+                    const parentElement = document.getElementById('parent-' + parentComment.id);
+
+                    // const parentElement = this.$refs['parent-' + parentComment.id];
+
+                    parentElement.appendChild(newElement);
+                    console.log(parentComment.id, 'parentComment ')
+                    console.log(parentElement, 'parentElement ')
 
                 }
 

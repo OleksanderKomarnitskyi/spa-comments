@@ -9,7 +9,6 @@ use App\Models\Comment;
 use App\Models\Post;
 use App\Services\CommentService;
 use Exception;
-use Illuminate\Http\RedirectResponse;
 
 class CommentController extends Controller
 {
@@ -28,6 +27,12 @@ class CommentController extends Controller
     }
 
 
+    /**
+     * @param Post $post
+     * @param StoreRequest $request
+     * @return array
+     * @throws Exception
+     */
     public function store(Post $post, StoreRequest $request)
     {
         $data = $request->validated();

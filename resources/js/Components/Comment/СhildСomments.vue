@@ -1,6 +1,6 @@
 
 <template>
-    <div class="ml-10 mb-4">
+    <div :id="'parent-' + parentCommentId"  class="ml-10 mb-4">
         <div v-for="comment in comments" :key="comment.id" >
             <div class="mt-8 p-2 border border-blue-600 rounded-lg">
                 <div class="pl-2 my-2 border-l-4 border-gray-600 bg-green-200" >
@@ -12,7 +12,6 @@
                 <div>Body: {{ comment.body }}</div>
                 <div class="hover:bg-red-500 cursor-default  w-24 bg-green-500 rounded-lg text-center text-white"
                      @click="toggleReplyForm(comment.id)">Reply</div>
-
                 <div class="text-sm text-left">
                     <div v-if="comment.subCount > 0" >
                         <div class="hover:bg-red-500 cursor-default w-32 bg-green-500 rounded-lg text-center text-white"
@@ -20,9 +19,7 @@
                     </div>
                     <div v-if="comment.subCount < 1" >No comments</div>
                 </div>
-
                 <div class="text-sm text-right">{{ comment.date }}</div>
-
                 <div v-if="selectedCommentId === comment.id" >
                     <ReplyForm
                         :postId="this.postId"
@@ -31,9 +28,7 @@
                         @addComment="addCom"
                     ></ReplyForm>
                 </div>
-
             </div>
-
             <div v-if="selectedParentCommentId === comment.id">
                 <ChildComments
                     :postId="this.postId"
@@ -41,7 +36,6 @@
                     :errors=this.errors
                 ></ChildComments>
             </div>
-
         </div>
     </div>
 </template>
