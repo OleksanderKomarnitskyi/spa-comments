@@ -22,8 +22,8 @@ Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+        'postsCount' => \App\Models\Post::count(),
+        'commentCount' => \App\Models\Comment::count(),
     ]);
 })->name('home');
 

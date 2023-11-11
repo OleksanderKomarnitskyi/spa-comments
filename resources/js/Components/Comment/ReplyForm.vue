@@ -1,6 +1,6 @@
 <template>
 
-    <div>
+    <div class="mb-4 pl-4" >
         <form @submit.prevent="recaptcha">
             <div class="mb-2">
                 <input v-model="user_name" type="text" class="w-full rounded-lg border-gray-200" placeholder="Yor Full name">
@@ -22,7 +22,7 @@
             <jet-input-error :message="errors.captcha_token" class="mt-2" />
 
                     <div class="mb-2" >
-                        <button type="submit" class="hover:bg-red-500 cursor-default w-48 bg-green-500 rounded-lg text-center text-white">
+                        <button type="submit" class=" mb-4 py-1  hover:bg-sky-500 w-48 bg-green-500 rounded-lg text-sm  text-center text-white" style="cursor: pointer" >
                             Submit your comment
                         </button>
                     </div>

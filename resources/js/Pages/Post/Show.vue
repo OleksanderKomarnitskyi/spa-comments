@@ -1,20 +1,20 @@
 <template>
 
     <h1 class="text-lg"> Post Show</h1>
-    <div class="mb-4">
+    <div class="mb-4 py-1 hover:bg-sky-500 w-32 bg-green-500 rounded-lg text-center text-white"  style="cursor: pointer">
         <Link :href="route('post.index')" class="text-lg"> Back</link>
     </div>
     <div v-if="post">
         <div class="mt-8 pt-8 border-t border-gray-300">
-            <div>Post ID: {{ post.id }}</div>
-            <div>Title: {{ post.title }}</div>
-            <div>Content: {{ post.content }}</div>
-            <div class="hover:bg-red-500 cursor-default  w-24 bg-green-500 rounded-lg text-center text-white"
-                 @click="toggleCommentPostForm">To comment</div>
-
-            <div class="text-sm text-right">{{ post.date }}</div>
-            <div class="text-sm text-right">comment count {{ post.commentsCount }}</div>
-
+            <div class="mb-4 py-4 pl-4 bg-gray-100 rounded-lg ">{{ post.title }}</div>
+            <div class="mb-4 pl-4" >{{ post.content }}</div>
+            <div class=" pl-4 btn_row_grouper">
+                <div class="mb-4 py-1 hover:bg-sky-500 w-32 bg-green-500 rounded-lg text-center text-white"  style="cursor: pointer"
+                     @click="toggleCommentPostForm">To comment
+                </div>
+                <div class="text-lg text-right">{{ post.date }}</div>
+                <div class="text-lg text-right">comment count {{ post.commentsCount }}</div>
+            </div>
             <div v-if="commentPostForm" >
                 <ReplyForm
                     :postId="post.id"
@@ -22,39 +22,39 @@
                     :errors=this.errors
                     @addComment="addCom"
                 ></ReplyForm>
-
             </div>
-
         </div>
         <div class="mx-5" v-if="comments.data">
             <div class="" v-for="comment in comments.data">
                 <div class="mt-8 p-2 border border-blue-600 rounded-lg">
-                        <div>Comment ID: {{ comment.id }}</div>
-                        <div>User: {{ comment.user_name }}</div>
-                        <div>Email: {{ comment.user_email }}</div>
-                        <div>Body: {{ comment.body }}</div>
-                        <div class="hover:bg-red-500 cursor-default  w-24 bg-green-500 rounded-lg text-center text-white"
-                             @click="toggleReplyForm(comment.id)">Reply</div>
-
-                        <div class="text-sm text-left">
-                            <div v-if="comment.subCount > 0" >
-                                <div class="hover:bg-red-500 cursor-default w-32 bg-green-500 rounded-lg text-center text-white"
-                                     @click="toggleShowSubComments(comment.id)">Show {{ comment.subCount }} comments </div>
-                            </div>
-                            <div v-if="comment.subCount < 1" >No comments</div>
+                    <div class="mb-4  px-4 py-4 user_info_group bg-gray-100 rounded-lg" >
+                        <div class="user_name_mail" >
+                            <div>{{ comment.user_name }}</div>
+                            <div>{{ comment.user_email }}</div>
                         </div>
-
-                        <div class="text-sm text-right">{{ comment.date }}</div>
-
-                        <div v-if="selectedCommentId === comment.id" >
-                            <ReplyForm
-                                :postId="post.id"
-                                :parentId="comment.id"
-                                :errors=this.errors
-                                @addComment="addCom"
-                            ></ReplyForm>
-                        </div>
+                        <div class="text-sm">{{ comment.date }}</div>
                     </div>
+                    <div class="mb-4 pl-2" >Body: {{ comment.body }}</div>
+                    <div class="btn_row_grouper">
+                        <div class="mb-4 py-1 hover:bg-sky-500 w-32 bg-green-500  rounded-lg text-sm  text-center text-white"  style="cursor: pointer"
+                             @click="toggleReplyForm(comment.id)">Reply
+                        </div>
+                        <div v-if="comment.subCount > 0" >
+                            <div class="mb-4 py-1 hover:bg-sky-500 w-32 bg-green-500 rounded-lg text-sm  text-center text-white"  style="cursor: pointer"
+                                 @click="toggleShowSubComments(comment.id)">Show {{ comment.subCount }} comments
+                            </div>
+                        </div>
+                        <div v-if="comment.subCount < 1" >No comments</div>
+                    </div>
+                    <div v-if="selectedCommentId === comment.id" >
+                        <ReplyForm
+                            :postId="post.id"
+                            :parentId="comment.id"
+                            :errors=this.errors
+                            @addComment="addCom"
+                        ></ReplyForm>
+                    </div>
+                </div>
                 <div v-if="selectedParentCommentId === comment.id">
                     <ChildComments
                         :key=randNum
@@ -175,5 +175,21 @@ export default {
 </script>
 
 <style>
+
+.user_info_group {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.btn_row_grouper {
+    display: flex;
+    gap: 20px;
+}
+
+.user_name_mail {
+    display: flex;
+    gap: 20px;
+}
 
 </style>

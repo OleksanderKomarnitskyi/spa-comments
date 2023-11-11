@@ -19,7 +19,7 @@ class ShowPostResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
-            'date' => Carbon::create($this->created_at)->format('m.d.y' . ' в ' . 'h:m' ),
+            'date' => Carbon::create($this->created_at)->format('m.d.y'). " in " .Carbon::create($this->created_at)->format('h:m' ),
             'commentsCount' => $this->comments_count ?? 0,
         ];
     }

@@ -23,7 +23,7 @@ class CommentsResource extends JsonResource
             'user_email' => $this->user_email,
             'body' => $this->body,
             'url' => $this->url ?? "",
-            'date' => Carbon::create($this->created_at)->format('m.d.y' . ' в ' . 'h:m' )
+            'date' => Carbon::create($this->created_at)->format('m.d.y'). " in " .Carbon::create($this->created_at)->format('h:m' )
         ];
     }
 }
