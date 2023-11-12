@@ -14,7 +14,7 @@
     </div>
 
     <div v-if="posts">
-        <div class="mt-8 pt-8 border-t border-gray-300" v-for="post in posts">
+        <div class="mt-8 pt-8 border-t border-gray-300" v-for="post in posts.data">
             <div class="mb-4 pl-4 btn_row_grouper" >
                 <div class="py-1 hover:bg-sky-500 w-24 bg-green-500 rounded-lg text-sm text-center text-white"  style="cursor: pointer">
                     <Link :href="route('post.show', post.id)">Show more</Link>
@@ -32,6 +32,7 @@
             <div class="mb-4 py-4 pl-4 bg-gray-100 rounded-lg">{{ post.title }}</div>
             <div class="mb-4 pl-4" >{{ post.content }}</div>
         </div>
+        <pagination v-if="posts.meta" class="mt-6" :links="posts.meta.links" />
     </div>
 
 </template>
@@ -40,22 +41,24 @@
 
 import {Link} from "@inertiajs/vue3";
 import PostLayout from "@/Layouts/PostLayout.vue";
+import Pagination from "@/Components/Pagination.vue";
 
 export default {
-    name: "index",
+    name: "post-index",
     layout: PostLayout,
 
     props: [
         'posts'
     ],
     components: {
-        Link
+        Link,
+        Pagination
     },
     methods: {
         deletePost(id) {
             this.$inertia.delete(`/posts/${id}`)
         }
-    }
+    },
 }
 
 </script>

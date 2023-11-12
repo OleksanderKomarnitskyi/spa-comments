@@ -13,6 +13,7 @@ use App\Models\Post;
 use App\Services\PostService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Response;
 
@@ -33,19 +34,26 @@ class PostController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return Response
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $posts = Cache::remember('posts:index', 60*60*24, function ()  {
-            return Post::select(['id', 'title', 'content', 'created_at'])->get();
+        $cacheIndex = 'posts:page:1';
+        $request->whenFilled('page', function (string $value) use (&$cacheIndex) {
+            $cacheIndex = 'posts:page:'.$value;
         });
 
-        $posts = PostResource::collection($posts->sortByDesc('created_at'))->resolve();
+        $posts = Cache::remember($cacheIndex, 60*60, function ()  {
+            return Post::select(['id', 'title', 'content', 'created_at'])
+                ->orderByDesc('created_at')
+                ->paginate(25)
+                ->withQueryString();
+        });
 
-        return inertia('Post/Index', [
-            'posts' => $posts
-        ]);
+        $posts = PostResource::collection($posts);
+
+        return inertia('Post/Index', compact('posts'));
     }
 
     /**

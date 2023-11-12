@@ -12,13 +12,7 @@ class PostObserver
      */
     public function created(Post $post): void
     {
-        Cache::put('posts:' . $post->id, $post, 60*60*24);
-        if (Cache::has('posts:index')) {
-            $posts = Cache::get('posts:index');
-            $posts->push($post);
-            Cache::put('posts:index', $posts, 60*60*24);
-        }
-
+        Cache::flush();
     }
 
     /**
@@ -34,15 +28,7 @@ class PostObserver
      */
     public function deleted(Post $post): void
     {
-        Cache::forget('posts:' . $post->id);
-        if (Cache::has('posts:index')) {
-            $posts = Cache::get('posts:index');
-            $updatedPosts = $posts->reject(function ($item) use ($post) {
-                return $item->id === $post->id;
-            });
-            Cache::put('posts:index', $updatedPosts, 60*60*24);
-        }
-
+        Cache::flush();
     }
 
     /**

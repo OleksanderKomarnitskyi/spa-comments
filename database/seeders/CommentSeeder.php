@@ -13,54 +13,28 @@ class CommentSeeder extends Seeder
      */
     public function run(): void
     {
-        $inputComment = [
-            'user_name' => fake()->firstName . ' ' . fake()->lastName,
-            'user_email' => fake()->email(),
-            'url' => fake()->url ,
-            'body' => fake()->realText(100)
-        ];
-        $post = Post::first();
+        $posts = Post::select(['id'])->get();
 
-       $parentComment1 = $post->comments()->create($inputComment);
-       $parentComment2 = $post->comments()->create($inputComment);
-
-       $i = 0;
-       while ($i < 2) {
-           $inputSubComment = [
-               'user_name' => fake()->firstName . ' ' . fake()->lastName,
-               'user_email' => fake()->email(),
-               'url' => fake()->url ,
-               'body' => fake()->realText(100)
-           ];
-
-         $subComment1 = $parentComment1->replies()->create($inputSubComment);
-         $subComment1->post()->associate($post->id);
-         $subComment1->save();
-           $i++;
-       }
-
-        $subComment4 = $subComment1->replies()->create([
-            'user_name' => fake()->firstName . ' ' . fake()->lastName,
-            'user_email' => fake()->email(),
-            'url' => fake()->url ,
-            'body' => fake()->realText(100)
-        ]);
-        $subComment4->post()->associate($post->id);
-        $subComment4->save();
-
-        $j = 0;
-        while ($j < 2) {
-            $inputSubComment = [
+        foreach ($posts as $post) {
+            $inputComment1 = [
                 'user_name' => fake()->firstName . ' ' . fake()->lastName,
                 'user_email' => fake()->email(),
-                'url' => fake()->url ,
+                'url' => fake()->url,
                 'body' => fake()->realText(100)
             ];
-             $subComment3 = $parentComment2->replies()->create($inputSubComment);
-             $subComment3->post()->associate($post->id);
-             $subComment3->save();
-            $j++;
+            $inputComment2 = [
+                'user_name' => fake()->firstName . ' ' . fake()->lastName,
+                'user_email' => fake()->email(),
+                'url' => fake()->url,
+                'body' => fake()->realText(100)
+            ];
+
+            $comment1 = $post->comments()->create($inputComment1);
+            $comment2 = $comment1->replies()->create($inputComment2);
+            $comment1->save();
+            $comment2->save();
         }
+
 
     }
 }
